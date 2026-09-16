@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full bg-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Money - Express Credit & Loan</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts: Kanit & Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                        mono: ['Space Grotesk', 'Kanit', 'monospace'],
+                    },
+                    colors: {
+                        thunder: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            900: '#78350f',
+                        },
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .card-soft-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #2a1b08 100%);
+        }
+
+        .gold-pill-gradient {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .gold-button-gradient {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+        }
+
+        .blue-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+
+        .soft-shadow {
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+        }
+
+        .slip-shadow {
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.2);
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-100 flex flex-col items-center justify-start sm:py-6 sm:px-4">
+
+    <div class="w-full max-w-md bg-white min-h-screen sm:min-h-[860px] sm:rounded-[36px] soft-shadow border border-slate-200/80 flex flex-col justify-between overflow-hidden relative">
+
+        <!-- Header -->
+        <header class="bg-white/90 backdrop-blur-md sticky top-0 z-30 px-5 py-4 flex justify-between items-center border-b border-slate-100">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl gold-pill-gradient flex items-center justify-center text-white font-black shadow-md shadow-amber-500/20">
+                    <i data-lucide="zap" class="w-5 h-5 fill-current"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base text-slate-800 leading-tight tracking-tight flex items-center gap-1">
+                        THUNDER MONEY
+                    </h1>
+                    <span class="text-[11px] text-slate-400 font-medium tracking-wide">Express Credit Line</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="showToast('ไม่มีการแจ้งเตือนใหม่', 'info')" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors relative">
+                    <i data-lucide="bell" class="w-4.5 h-4.5"></i>
+                    <span id="notifBadge" class="absolute top-2 right-2 w-2 h-2 bg-amber-500 rounded-full"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Body -->
+        <main class="flex-1 overflow-y-auto px-5 py-5 space-y-5 bg-slate-50/60">
+
+            <div class="flex justify-between items-end px-1">
+                <div>
+                    <p class="text-xs text-slate-400 font-medium">ยินดีต้อนรับ,</p>
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2" id="userName">
+                        ศิริวัฒน์ ราศรี
+                        <span class="bg-emerald-50 text-emerald-600 text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">ยืนยันแล้ว</span>
+                    </h2>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">เลขที่บัญชีสินเชื่อ</p>
+                    <p class="text-xs font-mono font-semibold text-slate-700">LN-8849-2041-9</p>
+                </div>
+            </div>
+
+            <!-- Credit Card -->
+            <div class="card-soft-gradient rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute top-3 right-4 opacity-10 text-amber-400">
+                    <i data-lucide="zap" class="w-28 h-28"></i>
+                </div>
+
+                <div class="relative z-10 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-slate-300 font-light flex items-center gap-1.5">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i> วงเงินพร้อมใช้ (Available Limit)
+                        </span>
+                        <span class="text-[11px] bg-slate-800/80 text-amber-400 font-medium px-2.5 py-0.5 rounded-full border border-amber-500/30">สินเชื่อส่วนบุคคล</span>
+                    </div>
+
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="text-3xl font-extrabold tracking-tight font-mono text-amber-400" id="availableCredit">45,000.00</span>
+                        <span class="text-slate-300 text-sm font-medium">THB</span>
+                    </div>
+
+                    <div class="w-full bg-slate-800/80 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                        <div id="creditProgressBar" class="gold-pill-gradient h-full rounded-full transition-all duration-700" style="width: 93.75%;"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-700/60 text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[11px] mb-0.5">วงเงินอนุมัติรวม</span>
+                            <span class="font-semibold text-slate-100 font-mono text-sm" id="totalCredit">48,000.00</span> <span class="text-slate-400 text-[11px]">บาท</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-slate-400 block text-[11px] mb-0.5">ยอดเงินคงค้าง</span>
+                            <span class="font-semibold text-rose-400 font-mono text-sm" id="outstandingBalance">3,000.00</span> <span class="text-slate-400 text-[11px]">บาท</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Banner -->
+            <div id="emergencyUnlockBanner" class="bg-amber-500/10 border border-amber-300/60 rounded-2xl p-4 transition-all duration-500 relative">
+                <div class="flex items-start space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex-shrink-0 flex items-center justify-center text-amber-600 mt-0.5">
+                        <i data-lucide="gift" class="w-5 h-5 animate-bounce"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wider">โบนัสสิทธิพิเศษฉุกเฉิน</h4>
+                            <span class="text-[10px] bg-amber-500 text-white font-bold px-2 py-0.5 rounded-full">+30,000 THB</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                            ท่านจะได้รับวงเงินฉุกเฉินเพิ่ม <span class="text-amber-700 font-bold">30,000 บาท</span> ทันทีเมื่อชำระยอดคงค้าง <span class="text-rose-600 font-semibold" id="bannerDebtAmount">3,000.00</span> บาท
+                        </p>
+                        <button onclick="openRepayModal()" class="mt-2.5 text-xs font-bold text-slate-900 bg-amber-400 hover:bg-amber-300 px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+                            <i data-lucide="credit-card" class="w-3.5 h-3.5"></i> ชำระยอดคงค้างเพื่อปลดล็อก
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Services Grid (4 items) -->
+            <div>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">บริการด่วน</h3>
+                <div class="grid grid-cols-4 gap-2">
+                    
+                    <!-- Service 1: Transfer -->
+                    <button onclick="openTransferModal()" class="group bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl p-3 flex flex-col items-center text-center transition-all duration-200 active:scale-95 shadow-sm">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                            <i data-lucide="arrow-right-left" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-slate-700 leading-tight">โอนวงเงิน</span>
+                        <span class="text-[9px] text-slate-400 mt-0.5 font-medium">ในประเทศ</span>
+                    </button>
+
+                    <!-- Service 2: Foreign Transfer NEW -->
+                    <button onclick="openForeignTransferModal()" class="group bg-white hover:bg-slate-50 border border-amber-300/80 bg-amber-50/20 rounded-2xl p-3 flex flex-col items-center text-center transition-all duration-200 active:scale-95 shadow-sm relative overflow-hidden">
+                        <span class="absolute top-0 right-0 bg-indigo-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-bl-lg">NEW</span>
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                            <i data-lucide="globe" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-indigo-900 leading-tight">โอนต่างประเทศ</span>
+                        <span class="text-[9px] text-indigo-500 mt-0.5 font-medium">SWIFT / Global</span>
+                    </button>
+
+                    <!-- Service 3: ATM Withdrawal -->
+                    <button onclick="openAtmModal()" class="group bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl p-3 flex flex-col items-center text-center transition-all duration-200 active:scale-95 shadow-sm">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                            <i data-lucide="banknote" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-slate-700 leading-tight">กดเงินสด ATM</span>
+                        <span class="text-[9px] text-slate-400 mt-0.5 font-medium">ไม่ใช้บัตร</span>
+                    </button>
+
+                    <!-- Service 4: Pay Later -->
+                    <button onclick="openPayLaterModal()" class="group bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl p-3 flex flex-col items-center text-center transition-all duration-200 active:scale-95 shadow-sm">
+                        <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-[11px] font-bold text-slate-700 leading-tight">ผ่อนสินค้า</span>
+                        <span class="text-[9px] text-slate-400 mt-0.5 font-medium">Pay Later 0%</span>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- Repayment Shortcut -->
+            <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 flex justify-between items-center shadow-sm">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                        <i data-lucide="wallet" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-700">ชำระค่างวด / ปิดยอด</p>
+                        <p class="text-[10px] text-slate-400 font-medium">ชำระผ่าน PromptPay QR</p>
+                    </div>
+                </div>
+                <button onclick="openRepayModal()" class="px-3.5 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors font-bold">
+                    จัดการ
+                </button>
+            </div>
+
+            <!-- Transaction History -->
+            <div>
+                <div class="flex justify-between items-center mb-2 px-1">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">ประวัติการทำรายการ</h3>
+                        <p class="text-[10px] text-slate-400">คลิกที่รายการเพื่อดูสลิปย้อนหลัง</p>
+                    </div>
+                    <span class="text-[11px] font-semibold text-amber-600 hover:underline cursor-pointer" onclick="filterTransactions('all')">ดูทั้งหมด</span>
+                </div>
+
+                <div class="flex gap-1.5 mb-3">
+                    <button id="btnFilterAll" onclick="filterTransactions('all')" class="px-3 py-1 rounded-xl text-[11px] font-bold bg-amber-500 text-white transition-all shadow-sm">ทั้งหมด</button>
+                    <button id="btnFilterOutgoing" onclick="filterTransactions('outgoing')" class="px-3 py-1 rounded-xl text-[11px] font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all">เบิกใช้</button>
+                    <button id="btnFilterIncoming" onclick="filterTransactions('incoming')" class="px-3 py-1 rounded-xl text-[11px] font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all">ชำระคืน</button>
+                </div>
+
+                <div id="transactionList" class="space-y-2.5">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bg-white border-t border-slate-100 px-6 py-3 flex justify-between items-center z-20">
+            <button class="flex flex-col items-center space-y-1 text-amber-600">
+                <i data-lucide="home" class="w-5 h-5"></i>
+                <span class="text-[10px] font-semibold">หน้าแรก</span>
+            </button>
+            <button onclick="openTransferModal()" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-amber-600 transition-colors">
+                <i data-lucide="send" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium">โอนเงิน</span>
+            </button>
+            <button onclick="openForeignTransferModal()" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-indigo-600 transition-colors">
+                <i data-lucide="globe" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium">ต่างประเทศ</span>
+            </button>
+            <button onclick="showToast('คุณศิริวัฒน์ ราศรี • บัญชีได้รับการยืนยันสมบูรณ์', 'info')" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-amber-600 transition-colors">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium">บัญชี</span>
+            </button>
+        </nav>
+
+        <!-- Toast Notifications Container -->
+        <div id="toastContainer" class="absolute top-16 left-1/2 -translate-x-1/2 z-50 w-11/12 max-w-sm pointer-events-none flex flex-col items-center space-y-2"></div>
+    </div>
+
+    <!-- Modal 1: Domestic Transfer -->
+    <div id="transferModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                        <i data-lucide="arrow-right-left" class="w-4 h-4"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base">โอนวงเงินเข้าบัญชีธนาคาร</h3>
+                </div>
+                <button onclick="closeModal('transferModal')" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleTransferSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1">เลือกธนาคารปลายทาง</label>
+                    <select id="transferBank" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-700 text-sm focus:outline-none focus:border-amber-500">
+                        <option value="ธนาคารกสิกรไทย (KBANK)">ธนาคารกสิกรไทย (KBANK)</option>
+                        <option value="ธนาคารไทยพาณิชย์ (SCB)">ธนาคารไทยพาณิชย์ (SCB)</option>
+                        <option value="ธนาคารกรุงเทพ (BBL)">ธนาคารกรุงเทพ (BBL)</option>
+                        <option value="ธนาคารกรุงไทย (KTB)">ธนาคารกรุงไทย (KTB)</option>
+                        <option value="ธนาคารทหารไทยธนชาต (TTB)">ธนาคารทหารไทยธนชาต (TTB)</option>
+                        <option value="พร้อมเพย์ (PromptPay)">พร้อมเพย์ (PromptPay)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1">เลขที่บัญชี / เบอร์พร้อมเพย์</label>
+                    <input type="text" id="transferAccountNo" required placeholder="ระบุเลขบัญชี 10 หลัก" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 text-sm font-mono focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <label class="text-slate-500 font-medium">จำนวนเงินที่ต้องการโอน (บาท)</label>
+                        <span class="text-amber-600 font-semibold">สูงสุด: <span id="maxTransferAmount">45,000.00</span> THB</span>
+                    </div>
+                    <input type="number" id="transferAmount" required min="100" placeholder="0.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-amber-600 text-xl font-bold font-mono focus:outline-none focus:border-amber-500">
+                    <div class="flex gap-2 mt-2">
+                        <button type="button" onclick="setTransferPreset(1000)" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg">฿1,000</button>
+                        <button type="button" onclick="setTransferPreset(5000)" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg">฿5,000</button>
+                        <button type="button" onclick="setTransferPreset(10000)" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg">฿10,000</button>
+                        <button type="button" onclick="setTransferPreset(state.availableLimit)" class="text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-lg">สูงสุด</button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 space-y-1.5 text-xs">
+                    <div class="flex justify-between text-slate-500">
+                        <span>ชื่อบัญชีผู้รับ:</span>
+                        <span class="text-slate-800 font-bold" id="transferRecipientName">ศิริวัฒน์ ราศรี</span>
+                    </div>
+                    <div class="flex justify-between text-slate-500">
+                        <span>ค่าธรรมเนียมการโอน:</span>
+                        <span class="text-emerald-600 font-semibold">ฟรี (0.00 THB)</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full gold-pill-gradient hover:opacity-90 text-white font-bold py-3.5 rounded-xl transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-2 text-sm">
+                    <i data-lucide="check-circle-2" class="w-5 h-5"></i> ยืนยันการโอนวงเงิน
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Foreign Transfer Modal (NEW) -->
+    <div id="foreignTransferModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <i data-lucide="globe" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base">โอนเงินต่างประเทศ (Global Transfer)</h3>
+                        <p class="text-[10px] text-indigo-600 font-medium">โอนด่วนผ่านเครือข่าย SWIFT & Express Direct</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('foreignTransferModal')" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleForeignTransferSubmit(event)" class="space-y-4">
+                
+                <!-- Foreign Currency Select -->
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1">เลือกสกุลเงินปลายทาง</label>
+                    <select id="foreignCurrencySelect" onchange="calculateForeignExchange()" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 text-sm font-semibold focus:outline-none focus:border-indigo-500">
+                        <option value="USD" data-rate="35.50" data-flag="🇺🇸">🇺🇸 USD - ดอลลาร์สหรัฐ (1 USD ≈ 35.50 THB)</option>
+                        <option value="EUR" data-rate="38.80" data-flag="🇪🇺">🇪🇺 EUR - ยูโร (1 EUR ≈ 38.80 THB)</option>
+                        <option value="JPY" data-rate="0.24" data-flag="🇯🇵">🇯🇵 JPY - เยนญี่ปุ่น (100 JPY ≈ 24.00 THB)</option>
+                        <option value="GBP" data-rate="45.20" data-flag="🇬🇧">🇬🇧 GBP - ปอนด์สเตอริง (1 GBP ≈ 45.20 THB)</option>
+                        <option value="SGD" data-rate="26.50" data-flag="🇸🇬">🇸🇬 SGD - ดอลลาร์สิงคโปร์ (1 SGD ≈ 26.50 THB)</option>
+                        <option value="AUD" data-rate="23.40" data-flag="🇦🇺">🇦🇺 AUD - ดอลลาร์ออสเตรเลีย (1 AUD ≈ 23.40 THB)</option>
+                    </select>
+                </div>
+
+                <!-- Foreign Amount & Exchange Calculation -->
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1">จำนวนเงินต่างประเทศที่ต้องการโอน</label>
+                    <div class="relative">
+                        <input type="number" id="foreignAmountInput" oninput="calculateForeignExchange()" min="1" step="any" required placeholder="0.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3.5 pr-16 py-2.5 text-indigo-700 text-xl font-bold font-mono focus:outline-none focus:border-indigo-500">
+                        <span class="absolute right-3 top-3 text-xs font-bold text-slate-400 font-mono" id="currencyCodeLabel">USD</span>
+                    </div>
+                </div>
+
+                <!-- Rate calculation box -->
+                <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-3.5 text-xs space-y-2">
+                    <div class="flex justify-between items-center text-slate-600">
+                        <span>ยอดหักจากวงเงินสินเชื่อ (THB):</span>
+                        <span class="text-base font-extrabold text-indigo-700 font-mono" id="calculatedThbText">0.00 THB</span>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-500 border-t border-indigo-100 pt-1.5">
+                        <span>อัตราแลกเปลี่ยนปัจจุบัน:</span>
+                        <span class="font-medium text-slate-700 font-mono" id="currentExchangeRateText">1 USD = 35.50 THB</span>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-500">
+                        <span>ค่าธรรมเนียมโอนต่างประเทศ:</span>
+                        <span class="font-bold text-emerald-600">ฟรี (โปรโมชั่นพิเศษ)</span>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-500">
+                        <span>ระยะเวลาเงินเข้าบัญชี:</span>
+                        <span class="font-medium text-indigo-600">ทันที - 1 วันทำการ</span>
+                    </div>
+                </div>
+
+                <!-- Recipient Info -->
+                <div class="space-y-3 pt-1 border-t border-slate-100">
+                    <h4 class="text-xs font-bold text-slate-700">ข้อมูลผู้รับเงินปลายทาง</h4>
+                    
+                    <div>
+                        <label class="block text-[11px] text-slate-500 font-medium mb-1">ชื่อ-นามสกุล ผู้รับเงิน (ภาษาอังกฤษ)</label>
+                        <input type="text" id="foreignRecipientName" required placeholder="e.g. JOHN SMITH" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs font-mono uppercase focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-slate-500 font-medium mb-1">SWIFT / BIC Code</label>
+                            <input type="text" id="foreignSwiftCode" required placeholder="e.g. CHASUS33" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs font-mono uppercase focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-500 font-medium mb-1">เลขบัญชี / IBAN</label>
+                            <input type="text" id="foreignAccountNo" required placeholder="e.g. 98201293" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs font-mono focus:outline-none focus:border-indigo-500">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-md shadow-indigo-500/20 flex items-center justify-center gap-2 text-sm">
+                    <i data-lucide="globe" class="w-5 h-5"></i> ยืนยันการโอนเงินต่างประเทศ
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 3: ATM Cash Withdrawal -->
+    <div id="atmModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                        <i data-lucide="banknote" class="w-4 h-4"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base">กดเงินสดผ่านตู้ ATM ไม่ใช้บัตร</h3>
+                </div>
+                <button onclick="closeModal('atmModal')" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- ATM Form View -->
+            <div id="atmFormView" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1.5">เลือกตู้ ATM ที่ต้องการกดเงินสด</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="selectAtmBank(this, 'ตู้ ATM กสิกรไทย')" class="atm-bank-btn bg-amber-50 border-amber-500 text-amber-800 border-2 rounded-xl p-3 text-xs font-bold text-center">
+                            ตู้ ATM กสิกรไทย
+                        </button>
+                        <button type="button" onclick="selectAtmBank(this, 'ตู้ ATM ไทยพาณิชย์')" class="atm-bank-btn bg-slate-50 border border-slate-200 text-slate-700 rounded-xl p-3 text-xs font-semibold text-center hover:bg-slate-100">
+                            ตู้ ATM ไทยพาณิชย์
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1.5">เลือกจำนวนเงินที่ต้องการกด</label>
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <button type="button" onclick="setAtmAmount(500)" class="bg-slate-50 border border-slate-200 hover:border-amber-400 rounded-xl p-2.5 text-xs font-bold text-slate-700">500 ฿</button>
+                        <button type="button" onclick="setAtmAmount(1000)" class="bg-slate-50 border border-slate-200 hover:border-amber-400 rounded-xl p-2.5 text-xs font-bold text-slate-700">1,000 ฿</button>
+                        <button type="button" onclick="setAtmAmount(3000)" class="bg-slate-50 border border-slate-200 hover:border-amber-400 rounded-xl p-2.5 text-xs font-bold text-slate-700">3,000 ฿</button>
+                        <button type="button" onclick="setAtmAmount(5000)" class="bg-slate-50 border border-slate-200 hover:border-amber-400 rounded-xl p-2.5 text-xs font-bold text-slate-700">5,000 ฿</button>
+                        <button type="button" onclick="setAtmAmount(10000)" class="bg-slate-50 border border-slate-200 hover:border-amber-400 rounded-xl p-2.5 text-xs font-bold text-slate-700">10,000 ฿</button>
+                        <button type="button" onclick="setAtmAmount(20000)" class="bg-slate-50 border border-slate-200 hover:border-amber-400 rounded-xl p-2.5 text-xs font-bold text-slate-700">20,000 ฿</button>
+                    </div>
+                    <input type="number" id="atmAmountInput" placeholder="หรือระบุจำนวนเงิน (ทวีคูณ 100)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-amber-600 text-lg font-bold font-mono focus:outline-none focus:border-amber-500">
+                </div>
+
+                <button onclick="generateAtmCode()" class="w-full gold-pill-gradient hover:opacity-90 text-white font-bold py-3.5 rounded-xl transition-all shadow-md shadow-amber-500/20 flex items-center justify-center gap-2">
+                    <i data-lucide="qr-code" class="w-5 h-5"></i> สร้างรหัสถอนเงิน ATM
+                </button>
+            </div>
+
+            <!-- ATM Code Result View -->
+            <div id="atmCodeResultView" class="hidden space-y-4 text-center py-1">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+                    <span class="text-xs text-slate-500 font-medium block">รหัสถอนเงินสด (นำไปป้อนที่หน้าตู้ ATM)</span>
+                    <div class="text-3xl font-extrabold tracking-widest text-amber-600 font-mono" id="atmGeneratedPin">
+                        849-204
+                    </div>
+                    <div class="text-[11px] text-amber-700 bg-amber-100 py-1 px-3 rounded-full inline-block font-medium">
+                        รหัสหมดอายุใน: <span id="atmTimer" class="font-bold">15:00</span> นาที
+                    </div>
+                    
+                    <div class="flex justify-center my-2">
+                        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                            <svg class="w-32 h-32" viewBox="0 0 100 100">
+                                <rect width="100" height="100" fill="white"/>
+                                <path d="M10,10 h30 v30 h-30 z M15,15 v20 h20 v-20 z M22,22 h6 v6 h-6 z" fill="#1e293b"/>
+                                <path d="M60,10 h30 v30 h-30 z M65,15 v20 h20 v-20 z M72,22 h6 v6 h-6 z" fill="#1e293b"/>
+                                <path d="M10,60 h30 v30 h-30 z M15,65 v20 h20 v-20 z M22,72 h6 v6 h-6 z" fill="#1e293b"/>
+                                <rect x="45" y="10" width="8" height="25" fill="#1e293b"/>
+                                <rect x="45" y="45" width="25" height="10" fill="#1e293b"/>
+                                <rect x="60" y="60" width="25" height="25" fill="#1e293b"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500">หรือสแกน QR Code นี้ที่หน้าตู้ ATM เพื่อรับเงินสด</p>
+                </div>
+
+                <button onclick="confirmAtmCashCollected()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                    <i data-lucide="check" class="w-5 h-5"></i> ฉันรับเงินสดเรียบร้อยแล้ว
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Pay Later -->
+    <div id="payLaterModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base">ผ่อนสินค้า Pay Later 0%</h3>
+                </div>
+                <button onclick="closeModal('payLaterModal')" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handlePayLaterSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1">ชื่อสินค้า / ร้านค้าบริการ</label>
+                    <input type="text" id="payLaterItem" required placeholder="e.g. iPhone 16 Pro / Central Online" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1">ราคาสินค้าทั้งหมด (บาท)</label>
+                    <input type="number" id="payLaterPrice" oninput="calculateInstallments()" required min="500" placeholder="0.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-purple-700 text-xl font-bold font-mono focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1">ระยะเวลาผ่อนชำระ</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="selectTerm(3)" id="term3" class="term-btn bg-purple-50 border-2 border-purple-500 text-purple-800 rounded-xl p-2.5 text-center text-xs font-bold">
+                            3 เดือน (0%)
+                        </button>
+                        <button type="button" onclick="selectTerm(6)" id="term6" class="term-btn bg-slate-50 border border-slate-200 text-slate-700 rounded-xl p-2.5 text-center text-xs font-medium hover:bg-slate-100">
+                            6 เดือน (0%)
+                        </button>
+                        <button type="button" onclick="selectTerm(12)" id="term12" class="term-btn bg-slate-50 border border-slate-200 text-slate-700 rounded-xl p-2.5 text-center text-xs font-medium hover:bg-slate-100">
+                            12 เดือน
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-purple-50/60 border border-purple-200 rounded-2xl p-4 text-xs space-y-2">
+                    <div class="flex justify-between text-slate-600">
+                        <span>ผ่อนชำระเดือนละ:</span>
+                        <span class="text-base font-bold text-purple-700 font-mono" id="monthlyPaymentText">0.00 THB</span>
+                    </div>
+                    <div class="flex justify-between text-slate-500 text-[11px]">
+                        <span>งวดแรกเริ่มชำระ:</span>
+                        <span class="font-medium text-slate-700">30 วันนับจากวันนี้</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i> ยืนยันการทำรายการผ่อนชำระ
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 5: Repay Modal -->
+    <div id="repayModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden transition-opacity">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                        <i data-lucide="wallet" class="w-4 h-4"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-base">ชำระค่างวด / ปิดยอดคงค้าง</h3>
+                </div>
+                <button onclick="closeModal('repayModal')" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                    <span class="text-xs text-slate-500 block mb-1">ยอดเงินคงค้างที่ต้องชำระปัจจุบัน</span>
+                    <div class="text-2xl font-bold font-mono text-rose-600" id="repayModalDebtText">3,000.00 THB</div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-500 font-medium mb-1">ระบุจำนวนเงินที่ต้องการชำระ</label>
+                    <input type="number" id="repayAmountInput" value="3000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-emerald-600 text-xl font-bold font-mono focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <!-- PromptPay QR Box -->
+                <div class="bg-slate-900 text-white rounded-2xl p-5 text-center space-y-3">
+                    <div class="flex justify-center items-center gap-2">
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-widest font-mono">PROMPTPAY QR PAYMENT</span>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-xl inline-block shadow-inner">
+                        <svg class="w-36 h-36 mx-auto" viewBox="0 0 100 100">
+                            <rect width="100" height="100" fill="white"/>
+                            <path d="M10,10 h30 v30 h-30 z M15,15 v20 h20 v-20 z M22,22 h6 v6 h-6 z" fill="#0f172a"/>
+                            <path d="M60,10 h30 v30 h-30 z M65,15 v20 h20 v-20 z M72,22 h6 v6 h-6 z" fill="#0f172a"/>
+                            <path d="M10,60 h30 v30 h-30 z M15,65 v20 h20 v-20 z M22,72 h6 v6 h-6 z" fill="#0f172a"/>
+                            <rect x="45" y="10" width="8" height="30" fill="#0f172a"/>
+                            <rect x="45" y="48" width="20" height="8" fill="#0f172a"/>
+                            <rect x="70" y="50" width="15" height="15" fill="#0f172a"/>
+                            <rect x="50" y="70" width="25" height="15" fill="#0f172a"/>
+                        </svg>
+                    </div>
+
+                    <p class="text-[11px] text-slate-300">สแกน QR Code เพื่อชำระเงินผ่านแอปธนาคารทุกแห่ง</p>
+                </div>
+
+                <button onclick="handleRepaySubmit()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i> ยืนยันการชำระเงินเรียบร้อยแล้ว
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6: Digital Slip Modal -->
+    <div id="slipModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-opacity">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 space-y-4 slip-shadow border border-slate-100 relative">
+            
+            <button onclick="closeModal('slipModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="text-center pt-2">
+                <div class="w-12 h-12 rounded-full gold-pill-gradient text-white flex items-center justify-center mx-auto mb-2 shadow-md shadow-amber-500/30">
+                    <i data-lucide="zap" class="w-6 h-6 fill-current"></i>
+                </div>
+                <h3 class="font-bold text-slate-800 text-base">ใบเสร็จทำรายการ / E-Slip</h3>
+                <span id="slipStatusBadge" class="inline-block mt-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-300">ทำรายการสำเร็จ</span>
+            </div>
+
+            <!-- Slip details card -->
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-3 font-mono text-xs">
+                <div class="flex justify-between pb-2 border-b border-slate-200">
+                    <span class="text-slate-400">เลขที่อ้างอิง:</span>
+                    <span class="text-slate-700 font-bold" id="slipRefNo">TM-9821039</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">วัน-เวลา:</span>
+                    <span class="text-slate-700" id="slipDateTime">2026-09-16 08:30:12</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">ประเภทรายการ:</span>
+                    <span class="text-slate-800 font-bold" id="slipType">โอนวงเงิน</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">ผู้ทำรายการ:</span>
+                    <span class="text-slate-700">ศิริวัฒน์ ราศรี</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">ผู้รับเงิน / รายละเอียด:</span>
+                    <span class="text-slate-800 font-bold text-right" id="slipRecipient">KBANK - 123xxxx890</span>
+                </div>
+                <div class="flex justify-between pt-2 border-t border-slate-200 text-sm">
+                    <span class="text-slate-500 font-sans font-semibold">ยอดหักจากวงเงิน:</span>
+                    <span class="text-amber-600 font-bold" id="slipAmount">฿3,000.00 THB</span>
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="downloadSlipCopy()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
+                    <i data-lucide="download" class="w-4 h-4"></i> ดาวน์โหลดสลิป
+                </button>
+                <button onclick="closeModal('slipModal')" class="flex-1 gold-pill-gradient text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm">
+                    ตกลง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            totalLimit: 48000,
+            outstandingDebt: 3000,
+            get availableLimit() {
+                return this.totalLimit - this.outstandingDebt;
+            },
+            bonusUnlocked: false,
+            currentFilter: 'all',
+            selectedAtmBankName: 'ตู้ ATM กสิกรไทย',
+            selectedPayLaterTerm: 3,
+            atmCountdownInterval: null,
+            transactions: [
+                { id: 'TM-983002', date: '2026-09-16 08:10', type: 'โอนเงินต่างประเทศ (USD)', recipient: 'JOHN SMITH (SWIFT: CHASUS33)', amount: -3550, category: 'outgoing', status: 'สำเร็จ' },
+                { id: 'TM-981204', date: '2026-09-15 14:30', type: 'โอนวงเงิน', recipient: 'KBANK - 8920192831', amount: -2000, category: 'outgoing', status: 'สำเร็จ' },
+                { id: 'TM-981109', date: '2026-09-12 09:15', type: 'กดเงินสด ATM', recipient: 'ตู้ ATM กสิกรไทย', amount: -1000, category: 'outgoing', status: 'สำเร็จ' },
+                { id: 'TM-980021', date: '2026-09-05 18:00', type: 'ชำระคืนค่างวด', recipient: 'Thunder Money PromptPay', amount: 1500, category: 'incoming', status: 'สำเร็จ' }
+            ]
+        };
+
+        window.onload = function() {
+            lucide.createIcons();
+            updateUI();
+            renderTransactions();
+        };
+
+        function updateUI() {
+            document.getElementById('availableCredit').innerText = state.availableLimit.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('totalCredit').innerText = state.totalLimit.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('outstandingBalance').innerText = state.outstandingDebt.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('bannerDebtAmount').innerText = state.outstandingDebt.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('repayModalDebtText').innerText = `${state.outstandingDebt.toLocaleString('th-TH', { minimumFractionDigits: 2 })} THB`;
+            document.getElementById('maxTransferAmount').innerText = state.availableLimit.toLocaleString('th-TH', { minimumFractionDigits: 2 });
+
+            const percentage = (state.availableLimit / state.totalLimit) * 100;
+            document.getElementById('creditProgressBar').style.width = `${Math.min(Math.max(percentage, 0), 100)}%`;
+
+            // Bonus Unlock status check
+            const banner = document.getElementById('emergencyUnlockBanner');
+            if (state.bonusUnlocked) {
+                banner.classList.add('hidden');
+            } else {
+                banner.classList.remove('hidden');
+            }
+        }
+
+        function renderTransactions() {
+            const listContainer = document.getElementById('transactionList');
+            const filtered = state.transactions.filter(tx => {
+                if (state.currentFilter === 'all') return true;
+                return tx.category === state.currentFilter;
+            });
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-6 text-slate-400 text-xs">
+                        ไม่มีรายการในหมวดหมู่นี้
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = filtered.map(tx => {
+                const isIncoming = tx.amount > 0;
+                const isForeign = tx.type.includes('ต่างประเทศ');
+                
+                let icon = isIncoming ? 'arrow-down-left' : 'arrow-up-right';
+                if (isForeign) icon = 'globe';
+
+                let iconColor = isIncoming ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600';
+                if (isForeign) iconColor = 'bg-indigo-50 text-indigo-600';
+
+                const amountClass = isIncoming ? 'text-emerald-600' : 'text-slate-800';
+                const amountPrefix = isIncoming ? '+' : '';
+
+                return `
+                    <div onclick="openSlipModal('${tx.id}')" class="bg-white hover:bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex justify-between items-center transition-all cursor-pointer shadow-sm active:scale-98">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl ${iconColor} flex items-center justify-center font-bold">
+                                <i data-lucide="${icon}" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">${tx.type}</h4>
+                                <p class="text-[10px] text-slate-400 font-mono mt-0.5">${tx.recipient}</p>
+                                <p class="text-[9px] text-slate-400">${tx.date}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-bold font-mono ${amountClass}">
+                                ${amountPrefix}${Math.abs(tx.amount).toLocaleString('th-TH', { minimumFractionDigits: 2 })} THB
+                            </span>
+                            <span class="block text-[9px] text-emerald-600 font-semibold">${tx.status}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function filterTransactions(filter) {
+            state.currentFilter = filter;
+            ['All', 'Outgoing', 'Incoming'].forEach(type => {
+                const btn = document.getElementById(`btnFilter${type}`);
+                if (type.toLowerCase() === filter) {
+                    btn.className = "px-3 py-1 rounded-xl text-[11px] font-bold bg-amber-500 text-white transition-all shadow-sm";
+                } else {
+                    btn.className = "px-3 py-1 rounded-xl text-[11px] font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all";
+                }
+            });
+            renderTransactions();
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            if (id === 'atmModal' && state.atmCountdownInterval) {
+                clearInterval(state.atmCountdownInterval);
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-slate-900 text-white';
+            if (type === 'error') bgClass = 'bg-rose-600 text-white';
+            if (type === 'info') bgClass = 'bg-amber-500 text-slate-950 font-bold';
+
+            toast.className = `${bgClass} px-4 py-2.5 rounded-xl shadow-lg text-xs font-medium transition-all duration-300 transform translate-y-[-10px] opacity-0 flex items-center gap-2 pointer-events-auto`;
+            toast.innerHTML = `<i data-lucide="info" class="w-4 h-4"></i> ${message}`;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-[-10px]', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-10px]');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Foreign Transfer Logic
+        function openForeignTransferModal() {
+            document.getElementById('foreignAmountInput').value = '';
+            document.getElementById('foreignRecipientName').value = '';
+            document.getElementById('foreignSwiftCode').value = '';
+            document.getElementById('foreignAccountNo').value = '';
+            calculateForeignExchange();
+            openModal('foreignTransferModal');
+        }
+
+        function calculateForeignExchange() {
+            const select = document.getElementById('foreignCurrencySelect');
+            const selectedOpt = select.options[select.selectedIndex];
+            const code = select.value;
+            const rate = parseFloat(selectedOpt.getAttribute('data-rate')) || 1;
+            
+            document.getElementById('currencyCodeLabel').innerText = code;
+            document.getElementById('currentExchangeRateText').innerText = `1 ${code} = ${rate.toFixed(2)} THB`;
+
+            const foreignAmt = parseFloat(document.getElementById('foreignAmountInput').value) || 0;
+            const thbEquivalent = foreignAmt * rate;
+
+            document.getElementById('calculatedThbText').innerText = `${thbEquivalent.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} THB`;
+        }
+
+        function handleForeignTransferSubmit(e) {
+            e.preventDefault();
+            const select = document.getElementById('foreignCurrencySelect');
+            const currCode = select.value;
+            const selectedOpt = select.options[select.selectedIndex];
+            const rate = parseFloat(selectedOpt.getAttribute('data-rate')) || 1;
+            const foreignAmt = parseFloat(document.getElementById('foreignAmountInput').value) || 0;
+            const thbTotal = foreignAmt * rate;
+
+            const name = document.getElementById('foreignRecipientName').value.trim();
+            const swift = document.getElementById('foreignSwiftCode').value.trim().toUpperCase();
+            const acc = document.getElementById('foreignAccountNo').value.trim();
+
+            if (foreignAmt <= 0) {
+                showToast('กรุณาระบุจำนวนเงินต่างประเทศที่ต้องการโอน', 'error');
+                return;
+            }
+
+            if (thbTotal > state.availableLimit) {
+                showToast('ยอดเงินบาทเกินวงเงินที่สามารถโอนได้', 'error');
+                return;
+            }
+
+            // Deduct available limit / add to debt
+            state.outstandingDebt += thbTotal;
+
+            const refId = 'TM-' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
+
+            state.transactions.unshift({
+                id: refId,
+                date: now,
+                type: `โอนเงินต่างประเทศ (${foreignAmt.toFixed(2)} ${currCode})`,
+                recipient: `${name} (SWIFT: ${swift})`,
+                amount: -thbTotal,
+                category: 'outgoing',
+                status: 'สำเร็จ'
+            });
+
+            updateUI();
+            renderTransactions();
+            closeModal('foreignTransferModal');
+
+            openSlipModal(refId);
+            showToast(`ส่งคำขอโอนเงิน ${foreignAmt.toLocaleString('en-US', {minimumFractionDigits: 2})} ${currCode} สำเร็จแล้ว!`);
+        }
+
+        // Transfer Handlers
+        function openTransferModal() {
+            document.getElementById('transferAmount').value = '';
+            openModal('transferModal');
+        }
+
+        function setTransferPreset(amt) {
+            document.getElementById('transferAmount').value = amt;
+        }
+
+        function handleTransferSubmit(e) {
+            e.preventDefault();
+            const bank = document.getElementById('transferBank').value;
+            const acc = document.getElementById('transferAccountNo').value;
+            const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+
+            if (amount <= 0) {
+                showToast('กรุณาระบุจำนวนเงินที่ถูกต้อง', 'error');
+                return;
+            }
+
+            if (amount > state.availableLimit) {
+                showToast('จำนวนเงินเกินวงเงินคงเหลือพร้อมใช้', 'error');
+                return;
+            }
+
+            state.outstandingDebt += amount;
+            
+            const refId = 'TM-' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
+
+            state.transactions.unshift({
+                id: refId,
+                date: now,
+                type: 'โอนวงเงิน',
+                recipient: `${bank} - ${acc}`,
+                amount: -amount,
+                category: 'outgoing',
+                status: 'สำเร็จ'
+            });
+
+            updateUI();
+            renderTransactions();
+            closeModal('transferModal');
+
+            openSlipModal(refId);
+            showToast('โอนวงเงินเข้าบัญชีเรียบร้อยแล้ว!');
+        }
+
+        // ATM Handlers
+        function openAtmModal() {
+            document.getElementById('atmFormView').classList.remove('hidden');
+            document.getElementById('atmCodeResultView').classList.add('hidden');
+            document.getElementById('atmAmountInput').value = '';
+            openModal('atmModal');
+        }
+
+        function selectAtmBank(btn, bankName) {
+            document.querySelectorAll('.atm-bank-btn').forEach(b => {
+                b.className = "atm-bank-btn bg-slate-50 border border-slate-200 text-slate-700 rounded-xl p-3 text-xs font-semibold text-center hover:bg-slate-100";
+            });
+            btn.className = "atm-bank-btn bg-amber-50 border-amber-500 text-amber-800 border-2 rounded-xl p-3 text-xs font-bold text-center";
+            state.selectedAtmBankName = bankName;
+        }
+
+        function setAtmAmount(amt) {
+            document.getElementById('atmAmountInput').value = amt;
+        }
+
+        function generateAtmCode() {
+            const amount = parseFloat(document.getElementById('atmAmountInput').value) || 0;
+            if (amount <= 0 || amount % 100 !== 0) {
+                showToast('จำนวนเงินต้องเป็นทวีคูณ 100 บาท', 'error');
+                return;
+            }
+            if (amount > state.availableLimit) {
+                showToast('วงเงินไม่เพียงพอสำหรับการกดเงินสด', 'error');
+                return;
+            }
+
+            const pin = Math.floor(100000 + Math.random() * 900000).toString();
+            const formattedPin = pin.substring(0, 3) + '-' + pin.substring(3, 6);
+            document.getElementById('atmGeneratedPin').innerText = formattedPin;
+
+            document.getElementById('atmFormView').classList.add('hidden');
+            document.getElementById('atmCodeResultView').classList.remove('hidden');
+
+            state.outstandingDebt += amount;
+            const refId = 'TM-' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
+
+            state.transactions.unshift({
+                id: refId,
+                date: now,
+                type: 'กดเงินสด ATM',
+                recipient: state.selectedAtmBankName,
+                amount: -amount,
+                category: 'outgoing',
+                status: 'สำเร็จ'
+            });
+
+            updateUI();
+            renderTransactions();
+
+            let secondsLeft = 15 * 60;
+            if (state.atmCountdownInterval) clearInterval(state.atmCountdownInterval);
+
+            state.atmCountdownInterval = setInterval(() => {
+                secondsLeft--;
+                const mins = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                const secs = (secondsLeft % 60).toString().padStart(2, '0');
+                document.getElementById('atmTimer').innerText = `${mins}:${secs}`;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(state.atmCountdownInterval);
+                    closeModal('atmModal');
+                    showToast('รหัสถอนเงินหมดอายุ', 'error');
+                }
+            }, 1000);
+        }
+
+        function confirmAtmCashCollected() {
+            closeModal('atmModal');
+            showToast('บันทึกการรับเงินสดเรียบร้อย');
+        }
+
+        // Pay Later Handlers
+        function openPayLaterModal() {
+            document.getElementById('payLaterPrice').value = '';
+            document.getElementById('monthlyPaymentText').innerText = '0.00 THB';
+            openModal('payLaterModal');
+        }
+
+        function selectTerm(term) {
+            state.selectedPayLaterTerm = term;
+            [3, 6, 12].forEach(t => {
+                const btn = document.getElementById(`term${t}`);
+                if (t === term) {
+                    btn.className = "term-btn bg-purple-50 border-2 border-purple-500 text-purple-800 rounded-xl p-2.5 text-center text-xs font-bold";
+                } else {
+                    btn.className = "term-btn bg-slate-50 border border-slate-200 text-slate-700 rounded-xl p-2.5 text-center text-xs font-medium hover:bg-slate-100";
+                }
+            });
+            calculateInstallments();
+        }
+
+        function calculateInstallments() {
+            const price = parseFloat(document.getElementById('payLaterPrice').value) || 0;
+            if (price <= 0) {
+                document.getElementById('monthlyPaymentText').innerText = '0.00 THB';
+                return;
+            }
+            const monthly = (price / state.selectedPayLaterTerm).toFixed(2);
+            document.getElementById('monthlyPaymentText').innerText = `${parseFloat(monthly).toLocaleString('th-TH', { minimumFractionDigits: 2 })} THB / เดือน`;
+        }
+
+        function handlePayLaterSubmit(e) {
+            e.preventDefault();
+            const itemName = document.getElementById('payLaterItem').value;
+            const price = parseFloat(document.getElementById('payLaterPrice').value) || 0;
+
+            if (price <= 0) {
+                showToast('กรุณาระบุราคาสินค้า', 'error');
+                return;
+            }
+
+            if (price > state.availableLimit) {
+                showToast('วงเงินไม่เพียงพอสำหรับการผ่อนชำระ', 'error');
+                return;
+            }
+
+            state.outstandingDebt += price;
+            const refId = 'TM-' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
+
+            state.transactions.unshift({
+                id: refId,
+                date: now,
+                type: `ผ่อนสินค้า (${state.selectedPayLaterTerm} เดือน 0%)`,
+                recipient: itemName,
+                amount: -price,
+                category: 'outgoing',
+                status: 'สำเร็จ'
+            });
+
+            updateUI();
+            renderTransactions();
+            closeModal('payLaterModal');
+            showToast('อนุมัติการผ่อนสินค้าสำเร็จ!');
+        }
+
+        // Repayment Handlers
+        function openRepayModal() {
+            document.getElementById('repayAmountInput').value = state.outstandingDebt;
+            openModal('repayModal');
+        }
+
+        function handleRepaySubmit() {
+            const repayAmt = parseFloat(document.getElementById('repayAmountInput').value) || 0;
+            if (repayAmt <= 0) {
+                showToast('กรุณาระบุจำนวนเงินชำระคืน', 'error');
+                return;
+            }
+
+            state.outstandingDebt = Math.max(0, state.outstandingDebt - repayAmt);
+
+            if (!state.bonusUnlocked && state.outstandingDebt === 0) {
+                state.bonusUnlocked = true;
+                state.totalLimit += 30000;
+                
+                if (typeof confetti === 'function') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+                showToast('ยินดีด้วย! ท่านได้รับการขยายวงเงินเพิ่ม +30,000 THB', 'info');
+            } else {
+                showToast('ชำระค่างวดเรียบร้อยแล้ว');
+            }
+
+            const refId = 'TM-' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
+
+            state.transactions.unshift({
+                id: refId,
+                date: now,
+                type: 'ชำระคืนค่างวด',
+                recipient: 'Thunder Money PromptPay',
+                amount: repayAmt,
+                category: 'incoming',
+                status: 'สำเร็จ'
+            });
+
+            updateUI();
+            renderTransactions();
+            closeModal('repayModal');
+        }
+
+        // Slip Modal Handlers
+        function openSlipModal(txId) {
+            const tx = state.transactions.find(t => t.id === txId);
+            if (!tx) return;
+
+            document.getElementById('slipRefNo').innerText = tx.id;
+            document.getElementById('slipDateTime').innerText = tx.date;
+            document.getElementById('slipType').innerText = tx.type;
+            document.getElementById('slipRecipient').innerText = tx.recipient;
+            document.getElementById('slipAmount').innerText = `฿${Math.abs(tx.amount).toLocaleString('th-TH', { minimumFractionDigits: 2 })} THB`;
+
+            openModal('slipModal');
+        }
+
+        function downloadSlipCopy() {
+            showToast('บันทึกสลิปรายการลงในคลังภาพเรียบร้อย');
+            closeModal('slipModal');
+        }
+    </script>
+</body>
+</html>
